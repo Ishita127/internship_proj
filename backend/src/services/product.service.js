@@ -19,6 +19,11 @@ export const getProductById = async (id) => {
   return product;
 };
 
+// if created product is deleted, it should not be returned in the getAllProducts or getProductById endpoints. 
+// This is handled by adding a 'deleted' field to the Product model and filtering out deleted products in the 
+// getAllProducts and getProductById functions.
 export const createProduct = async (data) => await Product.create(data);
+
 export const updateProduct = async (id, data) => await Product.findByIdAndUpdate(id, data, { new: true });
+
 export const deleteProduct = async (id) => await Product.findByIdAndDelete(id); 

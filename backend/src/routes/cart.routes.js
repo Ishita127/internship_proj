@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { getCart, addToCart, updateCartItem, removeFromCart } from '../controllers/cart.controller.js';
-import { protect } from '../middlewares/auth.middleware.js';
+import { protect, restrictTo } from '../middlewares/auth.middleware.js';
 
 const router = Router();
-router.use(protect); // All cart routes require login
+// All cart routes require login
+// Only users can access cart routes
+router.use(protect, restrictTo('user')); 
 
 router.get('/', getCart);
 router.post('/', addToCart);
