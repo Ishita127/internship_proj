@@ -14,7 +14,8 @@ export const registerUser = async (userData) => {
   
   const user = await User.create({
     ...userData,
-    password: hashedPassword
+    password: hashedPassword,
+    role: 'customer'
   });
 
   const userObj = user.toObject();
@@ -22,7 +23,7 @@ export const registerUser = async (userData) => {
   return userObj;
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async ({email, password}) => {
   const user = await User.findOne({ email });
   if (!user) {
     const error = new Error('Invalid login credentials');
