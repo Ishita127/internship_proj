@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { request } from 'express';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -20,7 +21,7 @@ export const protect = async (req, res, next) => {
 
 export const restrictTo = (...allowedRoles) => {
   return (req, res, next) => {
-    if ( !req.user || !allowedRoles.includes(req.user.role)) {
+    if (!allowedRoles.includes(req.user.role)) {
       return res.status(403).json({ status: 'error', message: 'You do not have permission to perform this action' });
     } 
     next();

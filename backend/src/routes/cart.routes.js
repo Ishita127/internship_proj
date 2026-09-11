@@ -4,8 +4,8 @@ import { protect, restrictTo } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 // All cart routes require login
-// Only users can access cart routes
-router.use(protect, restrictTo('user')); 
+// Only customers can access cart routes
+router.use(protect, restrictTo('customer')); 
 
 router.get('/', getCart);
 router.post('/', addToCart);

@@ -1,12 +1,13 @@
 import Cart from '../models/Cart.js';
+import Product from '../models/Product.js';
 
 export const getCart = async (user_id) => await Cart.find({ user_id }).populate('product_id');
 
 export const addToCart = async (user_id, data) => {
-  const { product_id, quantity = 1 } = data;
+  const { product_id } = data;
 
   // bug 1: Verify the product actually exists before doing anything
-  const productExists = await Cart.findOne({ product_id });
+  const productExists = await Product.findById(product_id);
   if(!productExists) {
     const error = new Error('Product does not exist'); 
     error.statusCode = 404;
@@ -16,7 +17,7 @@ export const addToCart = async (user_id, data) => {
   // bug 2: If the product already exists in the cart, update the quantity instead of creating a new entry
   const existingCartItem = await Cart.findOne({ user_id, product_id });
   if (existingCartItem) {
-    existingCartItem.quantity += quantity;
+    //existingCartItem.quantity += quantity;
     return await existingCartItem.save();
   }
   return await Cart.create({ user_id, ...data});
