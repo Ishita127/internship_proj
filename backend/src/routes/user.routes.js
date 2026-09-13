@@ -38,7 +38,6 @@ router.put(
 
 router.delete(
     '/profile',
-    protect,
     requirePermission('deleteOwn', 'profile'),
     deleteProfile
 )
