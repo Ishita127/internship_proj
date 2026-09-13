@@ -23,10 +23,12 @@ router.post(
 );
 
 // Customer and Admin can view orders according to their permissions
+// logic was flawed. if a customer tries to access another customer's order, it should be denied. 
+// So, we will use requirePermission middleware to check if the user has permission to read the order.
+// bug fixed in controller by checking if the order belongs to the user for customers. Admins can access any order.
 router.get(
     '/',
     protect,
-    requirePermission('readOwn', 'order'),
     getUserOrders
 );
 
@@ -41,6 +43,7 @@ router.get(
 router.put(
     '/:id/status',
     protect,
+    restrictTo('admin'),
     requirePermission('updateAny', 'order'),
     updateOrderStatus
 );

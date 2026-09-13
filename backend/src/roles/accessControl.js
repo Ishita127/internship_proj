@@ -8,6 +8,7 @@ ac.grant(ROLES.CUSTOMER)
     .readAny('product')
     .readOwn('profile')
     .updateOwn('profile')
+    .deleteOwn('profile')
     .createOwn('order')
     .readOwn('order')
     .createOwn('review');

@@ -34,10 +34,6 @@ export const addToWishlist = async (userId, productId) => {
     });
 };
 
-export const getUserById = async (id) => await User.findById(id).select('-password');
-export const updateUser = async (id, data) => await User.findByIdAndUpdate(id, data, { new: true }).select('-password');
-export const getAllCustomers = async () => await User.find({ role: 'customer' }).select('-password');
-
 export const getWishlist = async (userId) => await Wishlist.find({ user_id: userId }).populate('product_id');
 
 export const removeFromWishlist = async (userId, wishlistId) => {
@@ -49,3 +45,10 @@ export const removeFromWishlist = async (userId, wishlistId) => {
     return { message: 'Removed from wishlist' };
 };
 
+export const getUserById = async (id) => await User.findById(id).select('-password');
+
+export const updateUser = async (id, data) => await User.findByIdAndUpdate(id, data, { new: true }).select('-password');
+
+export const getAllCustomers = async () => await User.find({ role: 'customer' }).select('-password');
+
+export const deleteUser = async (id) => await User.findByIdAndDelete(id);

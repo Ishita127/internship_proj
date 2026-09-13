@@ -26,6 +26,8 @@ export const requirePermission = (action, resource) => {
     };
 };
 
+//same logic already written in auth.middleware.js restrictTo function, so commented out
+/* 
 export const customerOnly = (req, res, next) => {
     if (req.user?.role !== 'customer') {
         return res.status(403).json({
@@ -35,3 +37,4 @@ export const customerOnly = (req, res, next) => {
 
     next();
 };
+*/
