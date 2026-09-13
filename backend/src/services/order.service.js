@@ -4,6 +4,9 @@ import Product from '../models/Product.js';
 export const createOrder = async (userId, orderData) => {
 
   let calculatedSubtotal = 0;
+  let delivery = 0;
+  const discount = orderData.discount || 0;
+  let finalTotal = 0;
 
   // Validate stock before placing order as required
   for (let item of orderData.items) {
@@ -20,19 +23,17 @@ export const createOrder = async (userId, orderData) => {
 
     // add actual database price to the subtotal
     calculatedSubtotal += (product.price * item.quantity);
-
-    //3. do final math
-    let delivery = 0;
-    if (calculatedSubtotal > 0 && calculatedSubtotal <= 500) {
-      delivery = 50;
-    }
-    const discount = orderData.discount || 0;    
-
-    // Subtract the discount from the total
-    let finalTotal = calculatedSubtotal + delivery - discount;
-
-    finalTotal = Math.max(finalTotal, 0); // Ensure total is not negative
   }
+
+  //3. do final math
+  if (calculatedSubtotal > 0 && calculatedSubtotal <= 500) {
+    delivery = 50;
+  }
+
+  // Subtract the discount from the total
+  finalTotal = calculatedSubtotal + delivery - discount;
+
+  finalTotal = Math.max(finalTotal, 0); // Ensure total is not negative
 
   return await Order.create({
     user_id: userId,

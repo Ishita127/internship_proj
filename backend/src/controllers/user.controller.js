@@ -4,7 +4,15 @@ export const getProfile = async (req, res, next) => {
   try { res.status(200).json(await userService.getUserById(req.user._id)); } catch (e) { next(e); }
 };
 export const updateProfile = async (req, res, next) => {
-  try { res.status(200).json(await userService.updateUser(req.user._id, req.body)); } catch (e) { next(e); }
+  try { const safeData = {};
+    if (req.body.name) safeData.name = req.body.name;
+    if (req.body.phone) safeData.phone = req.body.phone;
+    if (req.body.address) safeData.address = req.body.address;
+
+    // 2. Pass our safeData object instead of the dangerous req.body
+    const updatedUser = await userService.updateUser(req.user._id, safeData);
+    
+    res.status(200).json(updatedUser); } catch (e) { next(e); }
 };
 
 export const deleteProfile = async (req, res, next) => {
