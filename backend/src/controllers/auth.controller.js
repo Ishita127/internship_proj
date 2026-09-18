@@ -52,16 +52,18 @@ export const forgotPassword = async (req, res, next) => {
       });
 
       res.status(200).json({ status: 'success', message: 'Token sent to email!' });
-    } catch (err) {
-      // If email fails, wipe the token for security
-      user.passwordResetToken = undefined;
-      user.passwordResetExpires = undefined;
-      await user.save({ validateBeforeSave: false });
+     } 
+     catch (err) {
+    console.log('EMAIL ERROR:', err);
 
-      const error = new Error('Error sending email. Try again later.');
-      error.statusCode = 500;
-      throw error;
-    }
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    const error = new Error(`Email sending failed: ${err.message}`);
+    error.statusCode = 500;
+    throw error;
+}
   } catch (error) {
     next(error);
   }
