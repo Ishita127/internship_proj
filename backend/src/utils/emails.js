@@ -1,15 +1,16 @@
 import nodemailer from 'nodemailer';
 
 export const sendEmail = async (options) => {
+    const port = Number(process.env.EMAIL_PORT);
 
-console.log('EMAIL_USERNAME:', process.env.EMAIL_USERNAME);
-console.log('EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
-console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
+    console.log('EMAIL_USERNAME:', process.env.EMAIL_USERNAME);
+    console.log('EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
+    console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
 
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
-        port: Number(process.env.EMAIL_PORT),
-        secure: true,
+        port: port,
+        secure: port === 465,
         auth: {
             user: process.env.EMAIL_USERNAME,
             pass: process.env.EMAIL_PASSWORD
