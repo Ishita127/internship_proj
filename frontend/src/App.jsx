@@ -2,72 +2,94 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import AdminLayout from "./components/AdminLayout";
+import Navbar from "./components/common/Navbar";
+import AdminLayout from "./components/admin/AdminLayout";
+import { useAuth } from "./context/AuthContext";
 
-import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart";
-import Wishlist from "./pages/Wishlist";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Categories from "./pages/Categories";
-import About from "./pages/About";
-import Checkout from "./pages/Checkout";
-import Orders from "./pages/Orders";
-import OrderDetails from "./pages/OrderDetails";
-import Profile from "./pages/Profile";
+import Home from "./pages/customer/Home";
+import Shop from "./pages/customer/Shop";
+import ProductDetails from "./pages/customer/ProductDetails";
+import Cart from "./pages/customer/Cart";
+import Wishlist from "./pages/customer/Wishlist";
+import Login from "./pages/customer/Login";
+import Signup from "./pages/customer/Signup";
+import Categories from "./pages/customer/Categories";
+import About from "./pages/customer/About";
+import Checkout from "./pages/customer/Checkout";
+import Orders from "./pages/customer/Orders";
+import OrderDetails from "./pages/customer/OrderDetails";
+import Profile from "./pages/customer/Profile";
+import ForgotPassword from "./pages/customer/ForgotPassword";
+import ResetPassword from "./pages/customer/ResetPassword";
 
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminProducts from "./pages/AdminProducts";
-import AdminProductForm from "./pages/AdminProductForm";
-import AdminCategories from "./pages/AdminCategories";
-import AdminOrders from "./pages/AdminOrders";
-import AdminOrderDetails from "./pages/AdminOrderDetails";
-import AdminCustomers from "./pages/AdminCustomers";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminProductForm from "./pages/admin/AdminProductForm";
+import AdminCategories from "./pages/admin/AdminCategories";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
+import AdminCustomers from "./pages/admin/AdminCustomers";
+import AdminReviews from "./pages/admin/AdminReviews";
+import AdminCustomerOrders from "./pages/admin/AdminCustomerOrders";
 
 const AppContent = () => {
   const location = useLocation();
+  const { user, isAuthenticated } = useAuth();
 
-  // Hide the storefront navbar inside the admin panel.
+  const isAdmin = isAuthenticated && user?.role === "admin";
   const isAdminPage = location.pathname.startsWith("/admin");
+
+  // Admin users should stay inside the admin area.
+  if (isAdmin && !isAdminPage) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <>
       {!isAdminPage && <Navbar />}
 
       <Routes>
-        {/* ==================== STOREFRONT ==================== */}
+        {/* Storefront */}
 
         <Route path="/" element={<Home />} />
 
         <Route path="/shop" element={<Shop />} />
 
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
 
-        <Route path="/categories" element={<Categories />} />
+        <Route
+          path="/categories"
+          element={<Categories />}
+        />
 
         <Route path="/about" element={<About />} />
 
-        {/* ==================== CUSTOMER ==================== */}
+        {/* Customer */}
 
         <Route path="/cart" element={<Cart />} />
 
-        <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
 
-        <Route path="/wishlist" element={<Wishlist />} />
+        <Route
+          path="/wishlist"
+          element={<Wishlist />}
+        />
 
-        {/* Customer Orders */}
         <Route
           path="/orders"
           element={<Orders />}
         />
 
-        {/* Customer Order Details */}
         <Route
           path="/orders/:id"
           element={<OrderDetails />}
@@ -78,7 +100,7 @@ const AppContent = () => {
           element={<Profile />}
         />
 
-        {/* ==================== AUTHENTICATION ==================== */}
+        {/* Authentication */}
 
         <Route
           path="/login"
@@ -90,19 +112,30 @@ const AppContent = () => {
           element={<Signup />}
         />
 
-        {/* ==================== ADMIN ==================== */}
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
+        />
+
+        {/* Admin */}
 
         <Route
           path="/admin"
           element={<AdminLayout />}
         >
           {/* Dashboard */}
+
           <Route
             index
             element={<AdminDashboard />}
           />
 
-          {/* ==================== PRODUCTS ==================== */}
+          {/* Products */}
 
           <Route
             path="products"
@@ -119,14 +152,14 @@ const AppContent = () => {
             element={<AdminProductForm />}
           />
 
-          {/* ==================== CATEGORIES ==================== */}
+          {/* Categories */}
 
           <Route
             path="categories"
             element={<AdminCategories />}
           />
 
-          {/* ==================== ORDERS ==================== */}
+          {/* Orders */}
 
           <Route
             path="orders"
@@ -138,11 +171,23 @@ const AppContent = () => {
             element={<AdminOrderDetails />}
           />
 
-          {/* ==================== CUSTOMERS ==================== */}
+          {/* Customers */}
 
           <Route
             path="customers"
             element={<AdminCustomers />}
+          />
+
+          <Route
+            path="customers/:customerId/orders"
+            element={<AdminCustomerOrders />}
+          />
+
+          {/* Reviews */}
+
+          <Route
+            path="reviews"
+            element={<AdminReviews />}
           />
         </Route>
       </Routes>

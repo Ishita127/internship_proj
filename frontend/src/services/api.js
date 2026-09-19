@@ -69,7 +69,6 @@ export const deleteProduct = async (id) => {
  * Backend returns the category array directly.
  */
 
-
 /* Categories */
 
 export const getCategories = async () => {
@@ -118,7 +117,21 @@ export const logoutUser = async () => {
   return response.data;
 };
 
+export const forgotPassword = async (email) => {
+  const response = await api.post("/auth/forgot-password", {
+    email,
+  });
 
+  return response.data;
+};
+
+export const resetPassword = async (token, password) => {
+  const response = await api.post(`/auth/reset-password/${token}`, {
+    password,
+  });
+
+  return response.data;
+};
 
 /*
  * Cart
@@ -155,10 +168,10 @@ export const removeCartItem = async (cartItemId) => {
 };
 
 /*
-* Wishlist
-*
-* All wishlist endpoints require authentication.
-*/
+ * Wishlist
+ *
+ * All wishlist endpoints require authentication.
+ */
 export const getWishlist = async () => {
   const response = await api.get("/users/wishlist");
 
@@ -202,7 +215,6 @@ export const getDashboardStats = async () => {
   const response = await api.get("/dashboard/stats");
   return response.data;
 };
-
 
 export const updateOrderStatus = async (id, orderStatus) => {
   const response = await api.put(`/orders/${id}/status`, {
